@@ -32,7 +32,7 @@ This agent is built on Google's ADK (Agent Development Kit) and allows users to 
 
 2. We recommend creating a virtual Python environment using venv:
    ```
-   python -m venv .venv
+   python3 -m venv .venv
    ```
    Now, you can activate the virtual environment using the appropriate command for your operating system and environment:
    ```
@@ -75,24 +75,23 @@ adk web
 
 ## How It Works
 
-The agent uses three main functions to interact with the Data Commons API:
+The agent uses these main functions to interact with the Data Commons API:
 
 1. `get_dcid()` - Resolves place names to their Data Commons identifiers (DCIDs)
 2. `get_available_variables()` - Retrieves up to 10 statistical variables available for one or more places
 3. `get_population_count()` - Gets population statistics for one or more places, with optional date filtering
+4. `get_observations()` - Retrieves statistical observations for given places and variables, with optional date filtering
 
 ## Next Steps
 
 Here are some ideas for future development:
 
-1. **Support for more statistical variables** - Extend beyond population counts to include other variables like median income, unemployment rates, etc.
+1. **Scale to more statistical variables** - Support for more statistical variables detection at scale (currently capped at 30).
 
 2. **Time series data retrieval** - Add functionality to get data over time periods rather than single dates
 
-3. **Comparative analysis** - Enable comparing statistics between multiple places
+3. **Get node properties** - Enable getting different node properties to understand filtering, parent and child relationships, etc.
 
 4. **Data visualization** - Integrate charts and graphs to visualize the retrieved data
 
 5. **Caching mechanism** - Implement caching to improve performance for repeated queries
-
-6. **Interactive dashboard** - Create a web interface for interacting with the agent
