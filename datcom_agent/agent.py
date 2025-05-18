@@ -4,9 +4,17 @@ from google.adk.agents import Agent
 import requests
 from dotenv import load_dotenv
 import os
+import pathlib
 
-# Load environment variables from .env file
-load_dotenv()
+# Get the root directory path
+root_dir = pathlib.Path(__file__).parent.parent.absolute()
+
+# Load environment variables from root .env file
+load_dotenv(dotenv_path=os.path.join(root_dir, '.env'))
+
+# Data Commons API v2 endpoints
+BASE_URL = "https://api.datacommons.org/v2"
+API_KEY = os.getenv("DATCOM_API_KEY")
 
 
 def get_place_dcids(places: list[str]) -> dict:
@@ -18,15 +26,12 @@ def get_place_dcids(places: list[str]) -> dict:
     Returns:
         dict: status and dcids or error message. 
     """
-    # Data Commons API v2 endpoints
-    base_url = "https://api.datacommons.org/v2"
-    api_key = os.getenv("DATCOM_API_KEY")
     
     try:
         # Resolve place names to DCIDs
-        resolve_url = f"{base_url}/resolve"
+        resolve_url = f"{BASE_URL}/resolve"
         resolve_params = {
-            "key": api_key,
+            "key": API_KEY,
             "nodes": places,
             "property": "<-description->dcid"
         }
@@ -38,7 +43,7 @@ def get_place_dcids(places: list[str]) -> dict:
         if not resolve_data.get("entities"):
             return {
                 "status": "error",
-                "error_message": f"Could not find place data for any of the provided places"
+                "error_message": f"Could not find dcids for any of the provided places"
             }
             
         # Process results for each place
@@ -80,17 +85,14 @@ def get_available_variables(place_dcids: str) -> dict:
         dict: status and available variables or error message.
               Note: Results are limited to the first 30 variables per place.
     """
-    # Data Commons API v2 endpoints
-    base_url = "https://api.datacommons.org/v2"
-    api_key = os.getenv("DATCOM_API_KEY")
     
     # Convert comma-separated string to list
     dcid_list = [dcid.strip() for dcid in place_dcids.split(",")]
     
     try:
         # Use observation API to get available variables using GET request
-        observation_url = f"{base_url}/observation"
-        url = f"{observation_url}?key={api_key}&date=LATEST"
+        observation_url = f"{BASE_URL}/observation"
+        url = f"{observation_url}?key={API_KEY}&date=LATEST"
         
         # Add entity.dcids parameters, properly URL encoded
         for dcid in dcid_list:
@@ -152,17 +154,14 @@ def get_population_count(place_dcids: str, date: str = "LATEST") -> dict:
     Returns:
         dict: status and population counts or error message.
     """
-    # Data Commons API v2 endpoints
-    base_url = "https://api.datacommons.org/v2"
-    api_key = os.getenv("DATCOM_API_KEY")
     
     # Convert comma-separated string to list
     dcid_list = [dcid.strip() for dcid in place_dcids.split(",")]
     
     try:
         # Use observation API to get population count
-        observation_url = f"{base_url}/observation"
-        url = f"{observation_url}?key={api_key}&date={requests.utils.quote(date)}"
+        observation_url = f"{BASE_URL}/observation"
+        url = f"{observation_url}?key={API_KEY}&date={requests.utils.quote(date)}"
         
         # Add entity.dcids parameters, properly URL encoded
         for dcid in dcid_list:
@@ -240,14 +239,11 @@ def get_observations(place_dcids: list[str], statvar_dcids: list[str], date: str
     Returns:
         dict: status and observations or error message.
     """
-    # Data Commons API v2 endpoints
-    base_url = "https://api.datacommons.org/v2"
-    api_key = os.getenv("DATCOM_API_KEY")
     
     try:
         # Use observation API to get observations
-        observation_url = f"{base_url}/observation"
-        url = f"{observation_url}?key={api_key}&date={requests.utils.quote(date)}"
+        observation_url = f"{BASE_URL}/observation"
+        url = f"{observation_url}?key={API_KEY}&date={requests.utils.quote(date)}"
         
         # Add entity.dcids parameters, properly URL encoded
         for dcid in place_dcids:

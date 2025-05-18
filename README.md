@@ -51,11 +51,12 @@ This agent is built on Google's ADK (Agent Development Kit) and allows users to 
    pip install google-adk
    ```
 
-4. Create a `.env` file in the `datcom_agent` directory with your API keys:
+4. Create a `.env` file in the root directory with your API keys:
    ```
    GOOGLE_GENAI_USE_VERTEXAI=FALSE
    GOOGLE_API_KEY=your_google_api_key
    DATCOM_API_KEY=your_datcom_api_key
+   # Add any other API keys for additional agents
    ```
 
 ## Usage
