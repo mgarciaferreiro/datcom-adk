@@ -1,26 +1,34 @@
 # Biomedical Agent
 
-A blank template for creating an AI agent that can answer questions about biomedical topics.
+An AI agent that leverages the [Data Commons](https://datacommons.org/) knowledge graph to answer questions about biomedical entities, including diseases, drugs, genes, and more.
 
 ## Overview
 
-This agent is built on Google's ADK (Agent Development Kit) and is intended as a starting point for developing a biomedical information retrieval system. When fully implemented, the agent could:
+This agent is built on Google's ADK (Agent Development Kit) and provides access to biomedical information through the Data Commons knowledge graph. The agent can:
 
-1. **Provide basic medical information** about conditions, treatments, and drugs
-2. **Search medical literature** from sources like PubMed
-3. **Find clinical trials** related to specific conditions
-4. **Answer general health questions** with proper citations
+1. **Identify biomedical entities** from user queries
+2. **Retrieve DCIDs** (Data Commons IDs) for biomedical entities
+3. **Access properties** of biomedical entities in the knowledge graph
+4. **Search scientific literature** via PubMed for the latest research
+5. **Provide browser links** to view entities in the Data Commons browser
 
-## Current Status
+## Current Capabilities
 
-This is a blank template with placeholder functionality. The agent currently includes:
+The agent currently includes these core functionalities:
 
-- A basic agent setup using Google's ADK
-- A function for looking up DCIDs for biomedical entities and other entities using Data Commons API's bulk find endpoint
-  - Supports optional entity type specification for disambiguation (e.g., "Disease", "Drug", "Country")
-  - Efficiently handles multiple entity lookups in a single API call
-- A placeholder function for returning information about medical conditions
-- A template .env file for API credentials
+- **Entity Recognition**: Identifies biomedical entities mentioned in queries using Data Commons' entity recognition API
+- **Property Retrieval**: Fetches specific properties of biomedical entities from the knowledge graph
+- **PubMed Integration**: Searches PubMed for scientific articles related to biomedical queries
+- **Browser Link Generation**: Creates links to the Data Commons browser for further exploration
+
+## Technical Details
+
+The agent uses four main functions to interact with Data Commons and PubMed APIs:
+
+1. `get_entity_dcids(entities)` - Recognizes entities in text and returns their DCIDs
+2. `get_entity_property(dcid, propName)` - Retrieves specific properties for an entity by its DCID
+3. `get_browser_link(dcids)` - Generates browser links to view entities in the Data Commons interface
+4. `get_pubmed_articles(query, max_results)` - Searches PubMed for scientific articles related to a query
 
 ## Setup and Installation
 
@@ -28,7 +36,7 @@ This is a blank template with placeholder functionality. The agent currently inc
 
 - Python 3.8 or higher
 - Google AI API key
-- (Eventually) API keys for medical information services
+- Data Commons API key
 
 ### Installation
 
@@ -51,39 +59,40 @@ This is a blank template with placeholder functionality. The agent currently inc
 
 4. Update the `.env` file in the root directory with your API keys.
 
-## Extending the Agent
-
-### API Integration Ideas
-
-The agent could be extended to integrate with:
-
-1. **PubMed API** - For searching medical literature
-2. **ClinicalTrials.gov API** - For finding clinical trials
-3. **MedlinePlus** - For general health information
-4. **DrugBank** - For medication information
-5. **UMLS (Unified Medical Language System)** - For standardized medical terminology
-
-### Function Ideas
-
-Consider implementing these functions:
-
-1. `search_medical_literature(query)` - Search PubMed for relevant articles
-2. `find_clinical_trials(condition)` - Find clinical trials for a condition
-3. `get_drug_information(drug_name)` - Get information about medications
-4. `translate_medical_terms(term)` - Explain complex medical terminology
-
 ## Usage
 
-Once developed, the agent could be used by running:
+Run the following command to launch the agent:
 
 ```
 adk web
 ```
 
-## Development Status
+### Example Queries
 
-⚠️ **IMPORTANT**: This agent is currently a blank template and does not yet provide actual biomedical information. It needs to be extended with real API integrations before it can be used for any medical purpose.
+- "What's the mechanism of action of atorvastatin?"
+- "What is Alzheimer's disease?"
+- "Find recent research on COVID-19 treatments"
+- "Show me the latest studies on diabetes management"
+- "What do recent papers say about CRISPR gene editing?"
+
+## How It Works
+
+1. When a user asks a question about a biomedical topic, the agent identifies relevant entities using `get_entity_dcids`
+2. It then retrieves properties for those entities using `get_entity_property`
+3. For queries about recent research, it searches PubMed using `get_pubmed_articles`
+4. The agent formulates a response based on the available information
+5. Finally, it provides links to the Data Commons browser for more detailed exploration using `get_browser_link`
+
+## Development Roadmap
+
+The agent can be extended to include:
+
+1. **Improved property identification and retrieval** - Identify all properties available for a given entity
+2. **Enhanced entity relationship detection** - Identify relationships between biomedical entities
+3. **Additional scientific databases** - Integrate with ClinicalTrials.gov, DrugBank, and other resources
+4. **Full-text article retrieval** - Add capability to access full-text articles where available
+5. **Citation formatting** - Format article citations in standard scientific styles (APA, MLA, etc.)
 
 ## Disclaimer
 
-This agent is intended for informational purposes only and not as a replacement for professional medical advice, diagnosis, or treatment. 
+This agent is intended for informational purposes only and not as a replacement for professional medical advice, diagnosis, or treatment. The scientific literature provided through PubMed integration should be evaluated by qualified healthcare professionals.
